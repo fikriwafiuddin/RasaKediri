@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rumah Makan Indonesia - Pemesanan Online</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.2/cdn.min.js"
+      defer
+    ></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+      body {
+        font-family: "Poppins", sans-serif;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-yellow-50"
+    x-data="{ 
+    cart: [],
+    menuCategories: [
+        { id: 'makanan-utama', name: 'Makanan Utama' },
+        { id: 'makanan-ringan', name: 'Makanan Ringan' },
+        { id: 'minuman', name: 'Minuman' }
+    ],
+    menuItems: [
+        { id: 1, category: 'makanan-utama', name: 'Nasi Goreng Spesial', price: 35000, description: 'Nasi goreng dengan telur, ayam, dan udang', image: '/api/placeholder/320/200' },
+        { id: 2, category: 'makanan-utama', name: 'Rendang Sapi', price: 45000, description: 'Daging sapi dengan bumbu rendang khas Padang', image: '/api/placeholder/320/200' },
+        { id: 3, category: 'makanan-utama', name: 'Sate Ayam', price: 30000, description: 'Sate ayam dengan bumbu kacang', image: '/api/placeholder/320/200' },
+        { id: 4, category: 'makanan-utama', name: 'Gado-gado', price: 25000, description: 'Sayuran segar dengan bumbu kacang', image: '/api/placeholder/320/200' },
+        { id: 5, category: 'makanan-ringan', name: 'Lumpia', price: 15000, description: 'Lumpia isi sayuran dan daging', image: '/api/placeholder/320/200' },
+        { id: 6, category: 'makanan-ringan', name: 'Risoles', price: 12000, description: 'Risoles isi sayuran dan daging', image: '/api/placeholder/320/200' },
+        { id: 7, category: 'minuman', name: 'Es Teh Manis', price: 8000, description: 'Teh manis dingin segar', image: '/api/placeholder/320/200' },
+        { id: 8, category: 'minuman', name: 'Es Jeruk', price: 10000, description: 'Jeruk segar dingin', image: '/api/placeholder/320/200' },
+        { id: 9, category: 'minuman', name: 'Es Kelapa Muda', price: 15000, description: 'Kelapa muda segar dengan es', image: '/api/placeholder/320/200' }
+    ],
+    activeCategory: 'makanan-utama',
+    customerName: '',
+    tableNumber: '',
+    notes: '',
+    
+    addToCart(item) {
+        const existingItem = this.cart.find(cartItem => cartItem.id === item.id);
+        if (existingItem) {
+            existingItem.quantity++;
+        } else {
+            this.cart.push({...item, quantity: 1});
+        }
+    },
+    
+    removeFromCart(itemId) {
+        const index = this.cart.findIndex(item => item.id === itemId);
+        if (index !== -1) {
+            this.cart.splice(index, 1);
+        }
+    },
+    
+    increaseQuantity(itemId) {
+        const item = this.cart.find(item => item.id === itemId);
+        if (item) {
+            item.quantity++;
+        }
+    },
+    
+    decreaseQuantity(itemId) {
+        const item = this.cart.find(item => item.id === itemId);
+        if (item && item.quantity > 1) {
+            item.quantity--;
+        } else if (item && item.quantity === 1) {
+            this.removeFromCart(itemId);
+        }
+    },
+    
+    totalItems() {
+        return this.cart.reduce((total, item) => total + item.quantity, 0);
+    },
+    
+    totalPrice() {
+        return this.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    },
+    
+    formatPrice(price) {
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price);
+    },
+    
+    placeOrder() {
+        if (this.customerName.trim() === '' || this.tableNumber.trim() === '') {
+            alert('Mohon isi nama dan nomor meja Anda');
+            return;
+        }
+        
+        if (this.cart.length === 0) {
+            alert('Keranjang Anda kosong. Silakan pilih menu terlebih dahulu.');
+            return;
+        }
+        
+        const orderDetails = {
+            customer: this.customerName,
+            tableNumber: this.tableNumber,
+            items: this.cart,
+            total: this.totalPrice(),
+            notes: this.notes,
+            orderTime: new Date().toLocaleString('id-ID')
+        };
+        
+        console.log('Pesanan dikirim:', orderDetails);
+        alert('Pesanan Anda telah diterima! Silakan tunggu pesanan Anda tiba.');
+        
+        // Reset keranjang dan form
+        this.cart = [];
+        this.notes = '';
+    },
+    
+    filteredMenuItems() {
+        return this.menuItems.filter(item => item.category === this.activeCategory);
+    }
+}"
+  >
+    <!-- Header -->
+    <header class="bg-orange-600 text-white shadow-lg">
+      <div class="container mx-auto px-4 py-6">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <div class="flex items-center mb-4 md:mb-0">
+            <img
+              src="/api/placeholder/50/50"
+              alt="Logo"
+              class="h-12 w-12 rounded-full mr-3"
+            />
+            <div>
+              <h1 class="text-2xl font-bold">Rumah Makan Indonesia</h1>
+              <p class="text-sm">Cita Rasa Asli Nusantara</p>
+            </div>
+          </div>
+          <div class="relative">
+            <button
+              class="bg-orange-700 hover:bg-orange-800 text-white py-2 px-4 rounded-lg flex items-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                />
+              </svg>
+              Keranjang
+              <span
+                x-show="totalItems() > 0"
+                class="bg-red-500 text-white rounded-full px-2 py-1 text-xs font-bold ml-2"
+                x-text="totalItems()"
+              ></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+      <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Menu Section -->
+        <div class="w-full lg:w-2/3">
+          <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-bold mb-4">Menu Kami</h2>
+
+            <!-- Category Navigation -->
+            <div class="flex overflow-x-auto space-x-2 mb-6 pb-2">
+              <template x-for="category in menuCategories" :key="category.id">
+                <button
+                  @click="activeCategory = category.id"
+                  :class="{'bg-orange-600 text-white': activeCategory === category.id, 'bg-gray-200 text-gray-800 hover:bg-gray-300': activeCategory !== category.id}"
+                  class="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors"
+                  x-text="category.name"
+                ></button>
+              </template>
+            </div>
+
+            <!-- Menu Items -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <template x-for="item in filteredMenuItems()" :key="item.id">
+                <div
+                  class="bg-gray-50 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
+                >
+                  <img
+                    :src="item.image"
+                    :alt="item.name"
+                    class="w-full h-40 object-cover"
+                  />
+                  <div class="p-4">
+                    <div class="flex justify-between items-start">
+                      <h3 class="font-bold text-lg" x-text="item.name"></h3>
+                      <span
+                        class="font-semibold text-orange-600"
+                        x-text="formatPrice(item.price)"
+                      ></span>
+                    </div>
+                    <p
+                      class="text-gray-600 text-sm mt-1 mb-3"
+                      x-text="item.description"
+                    ></p>
+                    <button
+                      @click="addToCart(item)"
+                      class="bg-orange-600 hover:bg-orange-700 text-white text-sm py-1 px-3 rounded flex items-center justify-center w-full transition-colors"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-4 w-4 mr-1"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                        />
+                      </svg>
+                      Tambahkan
+                    </button>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Section -->
+        <div class="w-full lg:w-1/3">
+          <div class="bg-white rounded-lg shadow-lg p-6 sticky top-4">
+            <h2 class="text-2xl font-bold mb-4">Pesanan Anda</h2>
+
+            <!-- Customer Info -->
+            <div class="mb-6">
+              <div class="mb-4">
+                <label
+                  for="customerName"
+                  class="block text-gray-700 text-sm font-medium mb-1"
+                  >Nama</label
+                >
+                <input
+                  type="text"
+                  id="customerName"
+                  x-model="customerName"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-transparent"
+                  placeholder="Masukkan nama Anda"
+                />
+              </div>
+              <div>
+                <label
+                  for="tableNumber"
+                  class="block text-gray-700 text-sm font-medium mb-1"
+                  >Nomor Meja</label
+                >
+                <input
+                  type="text"
+                  id="tableNumber"
+                  x-model="tableNumber"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-transparent"
+                  placeholder="Contoh: A1, B2, dsb"
+                />
+              </div>
+            </div>
+
+            <!-- Cart Items -->
+            <div class="mb-6">
+              <h3 class="font-semibold text-gray-800 mb-2">Item Pesanan</h3>
+              <div
+                x-show="cart.length === 0"
+                class="text-gray-500 text-sm italic"
+              >
+                Keranjang Anda masih kosong
+              </div>
+              <div x-show="cart.length > 0" class="space-y-3">
+                <template x-for="item in cart" :key="item.id">
+                  <div
+                    class="flex justify-between items-center py-2 border-b border-gray-200"
+                  >
+                    <div>
+                      <p class="font-medium" x-text="item.name"></p>
+                      <p
+                        class="text-sm text-gray-600"
+                        x-text="formatPrice(item.price) + ' x ' + item.quantity"
+                      ></p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                      <button
+                        @click="decreaseQuantity(item.id)"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-800 w-6 h-6 rounded flex items-center justify-center"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M20 12H4"
+                          />
+                        </svg>
+                      </button>
+                      <span x-text="item.quantity"></span>
+                      <button
+                        @click="increaseQuantity(item.id)"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-800 w-6 h-6 rounded flex items-center justify-center"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="mb-6">
+              <label
+                for="notes"
+                class="block text-gray-700 text-sm font-medium mb-1"
+                >Catatan</label
+              >
+              <textarea
+                id="notes"
+                x-model="notes"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-600 focus:border-transparent"
+                rows="2"
+                placeholder="Contoh: Tidak pedas, tanpa bawang, dll"
+              ></textarea>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="mb-6">
+              <div
+                class="flex justify-between items-center py-2 border-t border-b border-gray-200"
+              >
+                <span class="font-semibold">Total</span>
+                <span
+                  class="font-bold text-orange-600 text-lg"
+                  x-text="formatPrice(totalPrice())"
+                ></span>
+              </div>
+            </div>
+
+            <!-- Place Order Button -->
+            <button
+              @click="placeOrder()"
+              class="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-4 rounded-md w-full flex items-center justify-center transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+              Pesan Sekarang
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-green-800 text-white py-8">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <h3 class="text-lg font-bold mb-4">Rumah Makan Indonesia</h3>
+            <p class="text-gray-400">
+              Menyajikan makanan Indonesia terbaik dengan cita rasa autentik
+              yang membangkitkan kenangan.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold mb-4">Jam Operasional</h3>
+            <p class="text-gray-400">Senin - Jumat: 10:00 - 22:00</p>
+            <p class="text-gray-400">Sabtu - Minggu: 09:00 - 23:00</p>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold mb-4">Kontak</h3>
+            <p class="text-gray-400">Jl. Nusantara No. 123</p>
+            <p class="text-gray-400">Telp: (021) 1234-5678</p>
+            <p class="text-gray-400">Email: info@rumahmakan.id</p>
+          </div>
+        </div>
+        <div
+          class="mt-8 pt-6 border-t border-gray-700 text-center text-gray-400 text-sm"
+        >
+          <p>© 2025 Rumah Makan Indonesia. Hak Cipta Dilindungi.</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
