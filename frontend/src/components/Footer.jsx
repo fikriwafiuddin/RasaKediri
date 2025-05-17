@@ -1,7 +1,7 @@
 function Footer() {
   return (
     <div className="bg-green-900 text-white">
-      <div className="grid grid-cols-1 sm:grid-cols-3 items-start px-8 pt-4 pb-8 gap-5 border-b-2 border-green-800">
+      <div className="grid grid-cols-1 sm:grid-cols-3 px-8 pt-4 pb-8 gap-5 border-b-2 border-green-800">
         <div className="place-self-center">
           <h3 className="text-center font-bold mb-2">KediriEats</h3>
           <p className="text-center sm:text-left">
