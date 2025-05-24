@@ -1,7 +1,9 @@
 import { X } from "lucide-react"
 import { useState } from "react"
+import { formatCurrency } from "../../../utils/formatters"
+import Spinner from "../../../components/Spinner"
 
-function AddToCartModal({ food, onClose, addToCart }) {
+function AddToCartModal({ food, onClose, onAddToCart, isLoading }) {
   const [quantity, setQuantity] = useState(1)
 
   const handleChangeQuantity = (event) => {
@@ -20,12 +22,12 @@ function AddToCartModal({ food, onClose, addToCart }) {
           <X size={20} />
         </button>
         <img
-          src={food.image}
+          src={food.image.url}
           alt={food.name}
           className="h-48 w-full object-cover rounded"
         />
         <h3 className="font-bold text-green-900 mt-4 text-xl">{food.name}</h3>
-        <p className="text-green-900 mt-1">Rp {food.price.toLocaleString()}</p>
+        <p className="text-green-900 mt-1">{formatCurrency(food.price)}</p>
         <p className="text-sm mb-5">{food.description}</p>
         <div className="flex items-center gap-4 mb-3 text-green-900">
           <button
@@ -45,11 +47,16 @@ function AddToCartModal({ food, onClose, addToCart }) {
           </button>
         </div>
         <button
-          onClick={addToCart}
+          disabled={isLoading}
+          onClick={() => onAddToCart(food._id, quantity)}
           type="button"
           className="bg-green-900 hover:bg-green-900 text-white rounded w-full py-2"
         >
-          Tambahkan ke keranjang
+          {isLoading ? (
+            <Spinner size={4} type="secondary" />
+          ) : (
+            "Tambahkan ke keranjang"
+          )}
         </button>
       </div>
     </div>

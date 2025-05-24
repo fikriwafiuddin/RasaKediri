@@ -1,7 +1,12 @@
-import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 import Input from "../../../components/Input"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Textarea from "../../../components/Textarea"
+import { orderSchema } from "../../../schemas/orderSchema"
+import { axiosAuthInstance } from "../../../utils/axios"
+import { useState } from "react"
+import Spinner from "../../../components/Spinner"
 
 const config = [
   {
@@ -32,13 +37,32 @@ const config = [
 ]
 
 function Checkout() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    address: "",
-    notes: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm({
+    resolver: zodResolver(orderSchema),
+    mode: "onSubmit",
   })
+  const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
+
+  const onSubmit = async (data) => {
+    setIsLoading(true)
+    try {
+      await axiosAuthInstance.post("/order/createOrder", data)
+      navigate("/payment-success")
+    } catch (error) {
+      console.log(error)
+      for (const key in error?.errors) {
+        setError(key, { message: error.errors[key][0] })
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <div className="bg-green-50 min-h-screen flex items-start justify-center px-1">
@@ -50,33 +74,27 @@ function Checkout() {
           {"<<"} kembali
         </Link>
         <h1 className="text-center font-bold text-2xl mb-4">Chekout</h1>
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-2">
             {config.map((item) =>
               item.type === "textarea" ? (
-                <Textarea
-                  {...item}
-                  value={formData[item.name]}
-                  onChange={(e) =>
-                    setFormData({ ...formData, [item.name]: e.target.value })
-                  }
-                />
+                <Textarea key={item.name} {...item} {...register(item.name)} />
               ) : (
                 <Input
+                  key={item.name}
                   {...item}
-                  value={formData[item.name]}
-                  onChange={(e) =>
-                    setFormData({ ...formData, [item.name]: e.target.value })
-                  }
+                  {...register(item.name)}
+                  error={errors[item.name]?.message}
                 />
               )
             )}
           </div>
           <button
+            disabled={isLoading}
             className="w-full bg-green-900 hover:bg-green-800 text-white rounded py-2 mt-4"
             type="submit"
           >
-            Checkout
+            {isLoading ? <Spinner size={4} type="secondary" /> : "Checkout"}
           </button>
         </form>
       </div>

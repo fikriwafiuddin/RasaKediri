@@ -9,6 +9,8 @@ import {
   getMyOrders,
   getOrders,
   changeStatusOrder,
+  deleteOrder,
+  searchOrderById,
 } from "../controllers/orderController.js"
 
 const route = express.Router()
@@ -28,5 +30,7 @@ route.patch(
   verifyAdmin,
   changeStatusOrder
 )
+route.delete("/deleteOrder/:id", verifyToken, verifyAdmin, deleteOrder)
+route.get("/searchOrderById/:id", verifyToken, verifyAdmin, searchOrderById)
 
 export default route

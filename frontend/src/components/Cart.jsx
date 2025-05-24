@@ -1,8 +1,26 @@
-import { X, Trash2 } from "lucide-react"
+import { X } from "lucide-react"
 import { useNavigate } from "react-router-dom"
+import Spinner from "./Spinner"
+import { formatCurrency } from "../utils/formatters"
+import CartItem from "./CartItem"
+import { useSelector } from "react-redux"
 
-export default function Cart({ onClose, show }) {
+export default function Cart({ onClose, show, cart, isLoading }) {
+  const { isLoadingById, unsavedChangesById } = useSelector(
+    (state) => state.cart
+  )
   const navigate = useNavigate()
+
+  const totalPrice =
+    cart?.menuItems.reduce((total, item) => {
+      return total + item.menu.price * item.quantity
+    }, 0) || 0
+
+  const hasUnsavedChanges = Object.values(unsavedChangesById).some(Boolean)
+  const hasLoadingItems = Object.values(isLoadingById).some(Boolean)
+
+  const isCheckoutDisabled =
+    cart?.menuItems.length === 0 || hasUnsavedChanges || hasLoadingItems
 
   return (
     <div
@@ -28,58 +46,33 @@ export default function Cart({ onClose, show }) {
         </h2>
 
         {/* List item scrollable */}
-        <ul className="flex-1 overflow-y-auto space-y-4 px-4">
-          <li>
-            <div className="flex gap-2 relative">
-              <button
-                type="button"
-                className="absolute top-0 right-0 hover:text-red-500"
-              >
-                <Trash2 size={18} />
-              </button>
-              <img
-                src="images/nasigoreng.jpg"
-                alt=""
-                className="size-24 rounded"
-              />
-              <div className="flex flex-col justify-between">
-                <div className="flex flex-col">
-                  <span className="font-bold text-sm">Nasi Goreng Spesial</span>
-                  <span className="text-xs">Rp 18.000</span>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    className="outline-2 text-green-900 outline-green-900 hover:bg-green-900 hover:text-white rounded px-2"
-                  >
-                    -
-                  </button>
-                  <input
-                    type="number"
-                    name="quantity"
-                    className="w-10 outline-2 outline-green-900 text-center rounded text-sm"
-                    value={0}
-                    readOnly
-                  />
-                  <button
-                    type="button"
-                    className="outline-2 text-green-900 outline-green-900 hover:bg-green-900 hover:text-white rounded px-2"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-            </div>
-          </li>
-        </ul>
+        {isLoading && <Spinner size={12} />}
+        {(!cart || cart?.menuItems.length < 1) && !isLoading ? (
+          <p className="text-center text-xl">Cart is empty</p>
+        ) : (
+          <ul className="flex-1 overflow-y-auto space-y-4 px-4">
+            {cart?.menuItems.map((value) => {
+              return (
+                <li key={value.menu._id}>
+                  <CartItem item={value} />
+                </li>
+              )
+            })}
+          </ul>
+        )}
 
         {/* Checkout */}
         <div className="p-4 border-t-2 border-green-900 bg-white">
-          <p className="font-bold text-green-900">Total: Rp 300,000</p>
+          <p className="font-bold text-green-900">
+            Total: {formatCurrency(totalPrice)}
+          </p>
           <button
+            disabled={isCheckoutDisabled}
             onClick={() => navigate("/checkout")}
             type="button"
-            className="bg-green-900 hover:bg-green-800 text-white py-2 rounded w-full mt-4"
+            className={`bg-green-900 hover:bg-green-800 text-white py-2 rounded w-full mt-4 ${
+              isCheckoutDisabled && "opacity-50 cursor-not-allowed"
+            }`}
           >
             Bayar
           </button>

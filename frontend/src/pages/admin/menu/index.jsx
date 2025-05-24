@@ -1,7 +1,12 @@
 import { Pencil, Trash2 } from "lucide-react"
 import Table from "../../../components/Table"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import FormMenu from "./FormMenu"
+import { useDispatch, useSelector } from "react-redux"
+import { deleteMenu, getMenus } from "../../../store/thunk/menuThunk"
+import Spinner from "../../../components/Spinner"
+import { setCategory } from "../../../store/slices/menuSlice"
+import Confirm from "../../../components/Confirm"
 
 const config = [
   {
@@ -18,7 +23,7 @@ const config = [
   },
   {
     label: "Terjual",
-    render: (data) => data.terjual.toLocaleString(),
+    render: (data) => data.sold.toLocaleString(),
   },
   {
     label: "Aksi",
@@ -32,7 +37,7 @@ const config = [
           <Pencil size={16} />
         </button>
         <button
-          onClick={() => action.delete(data._id)}
+          onClick={() => action.delete(data)}
           type="button"
           className="bg-red-500 hover:bg-red-700 text-white p-1 rounded"
         >
@@ -43,38 +48,52 @@ const config = [
   },
 ]
 
-const data = [
-  {
-    _id: "1",
-    name: "Nasi Goreng Spesial",
-    price: 18000,
-    terjual: 100,
-    description: "Nasi goreng dengan telur dan ayam suwir",
-    image: "/images/Ayam geprek.jpg",
-  },
-  {
-    _id: "2",
-    name: "Mie Ayam Bakso",
-    price: 20000,
-    terjual: 50,
-    description: "Mie ayam lengkap dengan bakso dan sayur",
-    image: "/images/nasigoreng.jpg",
-  },
-]
-
 function Menu() {
   const [openForm, setOpenForm] = useState(false)
+  const [openConfirm, setOpenConfirm] = useState(false)
+  const { menus, isLoadingGetMenus, category, isLoadingDeleteMenu } =
+    useSelector((state) => state.menu)
   const [selectedFood, setSelectedFood] = useState(null)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getMenus(category))
+  }, [dispatch, category])
 
   const action = {
-    edit: (id) => {
-      setSelectedFood(id)
+    edit: (menu) => {
+      setSelectedFood(menu)
       setOpenForm(true)
     },
-    delete: (id) => console(id),
+    delete: (menu) => {
+      setOpenConfirm(true)
+      setSelectedFood(menu)
+    },
   }
+
+  const handleChangeCategory = (value) => {
+    dispatch(setCategory(value))
+  }
+
+  const handleDeleteMenu = () => {
+    dispatch(deleteMenu(selectedFood._id))
+      .unwrap()
+      .finally(() => {
+        setSelectedFood(null)
+        setOpenConfirm(false)
+      })
+  }
+
   return (
     <div>
+      <Confirm
+        isOpen={openConfirm}
+        onCancel={() => setOpenConfirm(false)}
+        message={`Are you sure you want to delete the ${selectedFood?.name} menu?`}
+        onConfirm={handleDeleteMenu}
+        isLoading={isLoadingDeleteMenu}
+      />
+
       <h1 className="text-2xl font-bold text-green-900">Menu</h1>
 
       {openForm && (
@@ -90,7 +109,7 @@ function Menu() {
         </button>
       )}
 
-      {openForm && <FormMenu food={selectedFood} />}
+      {openForm && <FormMenu food={selectedFood} setOpenForm={setOpenForm} />}
 
       <div className={openForm && "hidden"}>
         <div className="flex justify-between flex-col lg:flex-row items-start gap-2 mt-5">
@@ -103,20 +122,32 @@ function Menu() {
           </button>
           <div className="flex gap-4">
             <button
+              onClick={() => handleChangeCategory("food")}
               type="button"
-              className="outline-2 outline-green-900 text-green-900 rounded px-4 py-1 font-semibold hover:bg-green-900 hover:text-white duration-200"
+              className={`outline-2 outline-green-900 text-green-900 rounded px-4 py-1 font-semibold hover:bg-green-900 hover:text-white duration-200 ${
+                category === "food" && "bg-green-900 text-white"
+              }`}
             >
               Makanan
             </button>
             <button
+              onClick={() => handleChangeCategory("beverage")}
               type="button"
-              className="outline-2 outline-green-900 text-green-900 rounded px-4 py-1 font-semibold hover:bg-green-900 hover:text-white duration-200"
+              className={`outline-2 outline-green-900 text-green-900 rounded px-4 py-1 font-semibold hover:bg-green-900 hover:text-white duration-200 ${
+                category === "beverage" && "bg-green-900 text-white"
+              }`}
             >
               Minuman
             </button>
           </div>
         </div>
-        <Table data={data} config={config} action={action} />
+        {isLoadingGetMenus ? (
+          <Spinner size={12} />
+        ) : menus.length === 0 ? (
+          <p className="text-center text-xl">Orders not found</p>
+        ) : (
+          <Table data={menus} config={config} action={action} />
+        )}
       </div>
     </div>
   )

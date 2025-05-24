@@ -13,3 +13,25 @@ export const getUsers = async (req, res) => {
       .json({ message: "Internal server error", errors: {} })
   }
 }
+
+export const getUserByName = async (req, res) => {
+  const name = req.params?.name
+  try {
+    if (!name) {
+      return res.status(400).json({
+        message: "User name is required",
+        errors: { name: ["User name is required"] },
+      })
+    }
+
+    const user = await User.findOne({ name }).select("-password")
+    return res
+      .status(200)
+      .json({ message: "User retrieved successfully", data: { user } })
+  } catch (error) {
+    console.log("Error in getUserById", error)
+    return res
+      .status(500)
+      .json({ message: "Internal server error", errors: {} })
+  }
+}

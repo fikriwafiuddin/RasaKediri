@@ -2,7 +2,7 @@ export default function FoodCard({ food, selectFood }) {
   return (
     <div className="bg-white rounded shadow p-4">
       <img
-        src={food.image}
+        src={food.image.url}
         alt={food.name}
         className="w-full rounded h-48 object-cover mb-2"
       />

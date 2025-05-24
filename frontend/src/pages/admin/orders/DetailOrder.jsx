@@ -1,33 +1,27 @@
 import { useState } from "react"
 import StatusBadge from "../../../components/StatusBadge"
 import Table from "../../../components/Table"
+import { formatCurrency } from "../../../utils/formatters"
+import { useDispatch, useSelector } from "react-redux"
+import { changeStatusOrder } from "../../../store/thunk/orderThunk"
+import Spinner from "../../../components/Spinner"
 
 const config = [
   {
     label: "Nama",
-    render: (data) => data.name,
+    render: (data) => data.menu.name,
   },
   {
     label: "Jumlah",
-    render: (data) => data.quantity,
+    render: (data) => data.quantity.toLocaleString(),
   },
   {
     label: "Harga",
-    render: (data) =>
-      data.price.toLocaleString("id-ID", {
-        style: "currency",
-        currency: "IDR",
-      }),
+    render: (data) => formatCurrency(data.menu.price),
   },
   {
     label: "Total",
-    render: (data) => {
-      const total = data.quantity * data.price
-      return total.toLocaleString("id-ID", {
-        style: "currency",
-        currency: "IDR",
-      })
-    },
+    render: (data) => formatCurrency(data.quantity * data.menu.price),
   },
 ]
 
@@ -41,6 +35,15 @@ const statusOptions = [
 
 function DetailOrder({ order, onClose }) {
   const [status, setStatus] = useState(order.status)
+  const { isLoadingChangeStatusOrder } = useSelector((state) => state.order)
+  const dispatch = useDispatch()
+
+  const handleStatusChange = () => {
+    dispatch(changeStatusOrder({ id: order._id, status }))
+      .unwrap()
+      .then(() => onClose())
+  }
+
   return (
     <div className="mt-8 text-green-900">
       <button
@@ -56,7 +59,7 @@ function DetailOrder({ order, onClose }) {
           <tbody>
             <tr>
               <td className="font-semibold pr-10">Pembeli </td>
-              <td>: {order.user.name}</td>
+              <td>: {order.name}</td>
             </tr>
             <tr>
               <td className="font-semibold">Email </td>
@@ -84,31 +87,38 @@ function DetailOrder({ order, onClose }) {
         </table>
         <p className="whitespace-normal break-words">{order.notes}</p>
       </div>
-      <div className="flex mt-5 gap-4">
-        <select
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          name="status"
-          id="status"
-          className="border-2 border-green-900 bg-white rounded px-4 py-1 text-sm"
-        >
-          {statusOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-        <button
-          disabled={status === order.status}
-          type="button"
-          className={`bg-green-800 text-white rounded px-3 py-1 ${
-            status === order.status ? "opacity-50" : ""
-          } `}
-        >
-          Simpan
-        </button>
-      </div>
-      <Table data={order.items} config={config} />
+      {!["cancelled", "delivered"].includes(order.status) && (
+        <div className="flex mt-5 gap-4">
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            name="status"
+            id="status"
+            className="border-2 border-green-900 bg-white rounded px-4 py-1 text-sm"
+          >
+            {statusOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          <button
+            onClick={handleStatusChange}
+            disabled={status === order.status || isLoadingChangeStatusOrder}
+            type="button"
+            className={`bg-green-800 text-white rounded px-3 py-1 ${
+              status === order.status ? "opacity-50" : ""
+            } `}
+          >
+            {isLoadingChangeStatusOrder ? (
+              <Spinner size={4} type="secondary" />
+            ) : (
+              "Save"
+            )}
+          </button>
+        </div>
+      )}
+      <Table data={order.orderItems} config={config} />
     </div>
   )
 }

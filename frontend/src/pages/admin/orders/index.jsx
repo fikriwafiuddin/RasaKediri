@@ -1,9 +1,18 @@
 import { Info, Search, Trash2 } from "lucide-react"
 import Input from "../../../components/Input"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Table from "../../../components/Table"
 import DetailOrder from "./DetailOrder"
 import StatusBadge from "../../../components/StatusBadge"
+import { useDispatch, useSelector } from "react-redux"
+import { setStatus } from "../../../store/slices/orderSlice"
+import Spinner from "../../../components/Spinner"
+import {
+  deleteOrder,
+  getOrders,
+  searchOrderById,
+} from "../../../store/thunk/orderThunk"
+import Confirm from "../../../components/Confirm"
 
 const statusOptions = [
   { value: "all", label: "Semua" },
@@ -66,43 +75,48 @@ const config = [
   },
 ]
 
-const orders = [
-  {
-    _id: "68149c48088f4ea00fd3d4fd",
-    user: {
-      name: "John Doe",
-    },
-    name: "Jhon Doe",
-    email: "johndoe@example.com",
-    phone: "081234567890",
-    address: "Jl. Raya No. 123",
-    notes: "Catatan pesanan",
-    amount: 10000,
-    status: "pending",
-    items: [
-      {
-        productId: "22222",
-        name: "Nasi Goreng",
-        price: 10000,
-        quantity: 2,
-      },
-    ],
-    createdAt: "2023-02-20T14:30:00.000Z",
-  },
-]
-
 function Orders() {
-  const [status, setStatus] = useState("pending")
+  const { status, orders, isLoadingGetOrders, isLoadingDeleteOrder } =
+    useSelector((state) => state.order)
   const [search, setSearch] = useState("")
   const [selectedOrder, setSelectedOrder] = useState(null)
+  const [deleteOrderId, setDeleteOrderId] = useState(null)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getOrders(status))
+  }, [dispatch, status])
+
+  const handleSetStatus = (status) => {
+    dispatch(setStatus(status))
+    setSearch("")
+  }
+
+  const handleDeleteOrder = () => {
+    dispatch(deleteOrder(deleteOrderId))
+      .unwrap()
+      .then(() => setDeleteOrderId(null))
+  }
 
   const action = {
     openDetails: (order) => setSelectedOrder(order),
-    deleteOrder: (orderId) => console.log(orderId),
+    deleteOrder: (orderId) => setDeleteOrderId(orderId),
+  }
+
+  const handleSearch = (e) => {
+    e.preventDefault()
+    dispatch(searchOrderById(search))
   }
 
   return (
     <>
+      <Confirm
+        isOpen={deleteOrderId !== null}
+        onClose={() => setDeleteOrderId(null)}
+        message={`Are you sure you want to delete the ${deleteOrderId} order?`}
+        isLoading={isLoadingDeleteOrder}
+        onConfirm={handleDeleteOrder}
+      />
       <h1 className="text-2xl font-bold text-green-900">Pesanan</h1>
       {selectedOrder ? (
         <DetailOrder
@@ -112,7 +126,7 @@ function Orders() {
       ) : (
         <>
           <div className="flex justify-between flex-col lg:flex-row items-start gap-2 mt-5 text-green-900">
-            <form>
+            <form onSubmit={handleSearch}>
               <div className="flex gap-2">
                 <Input
                   value={search}
@@ -131,7 +145,7 @@ function Orders() {
             </form>
             <select
               value={status}
-              onChange={(e) => setStatus(e.target.value)}
+              onChange={(e) => handleSetStatus(e.target.value)}
               name="status"
               id="status"
               className="border-2 border-green-900 bg-white rounded px-4 py-1 text-sm"
@@ -143,7 +157,13 @@ function Orders() {
               ))}
             </select>
           </div>
-          <Table data={orders} config={config} action={action} />
+          {isLoadingGetOrders ? (
+            <Spinner size={12} />
+          ) : orders.length === 0 ? (
+            <p className="text-center text-xl">Orders not found</p>
+          ) : (
+            <Table data={orders} config={config} action={action} />
+          )}
         </>
       )}
     </>

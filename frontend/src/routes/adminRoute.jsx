@@ -1,4 +1,5 @@
-import AdminLayout from "../layouts/adminLayout"
+import AdminLayout from "../layouts/AdminLayout"
+import AdminRoute from "../middleware/AdminRoute"
 import Dashboard from "../pages/admin/dashboard"
 import Menu from "../pages/admin/menu"
 import Orders from "../pages/admin/orders"
@@ -6,7 +7,11 @@ import Users from "../pages/admin/users"
 
 const adminRoute = {
   path: "/admin",
-  element: <AdminLayout />,
+  element: (
+    <AdminRoute>
+      <AdminLayout />
+    </AdminRoute>
+  ),
   children: [
     {
       path: "/admin/dashboard",

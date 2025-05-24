@@ -55,6 +55,7 @@ export const addMenuToCart = async (req, res) => {
     }
 
     const updatedCart = await cart.save()
+    await updatedCart.populate("menuItems.menu")
     return res.status(200).json({
       message: "Product added to cart",
       data: {

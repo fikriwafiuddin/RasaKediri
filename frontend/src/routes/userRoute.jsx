@@ -1,4 +1,6 @@
 import UserLayout from "../layouts/UserLayout"
+import UserRoute from "../middleware/UserRoute"
+import PaymentSuccess from "../pages/status/PaymentSuccess"
 import Checkout from "../pages/user/checkout"
 import Home from "../pages/user/home"
 import Orders from "../pages/user/orders"
@@ -9,22 +11,36 @@ const userRoute = {
     {
       index: true,
       element: (
-        <UserLayout>
-          <Home />
-        </UserLayout>
+        <UserRoute>
+          <UserLayout>
+            <Home />
+          </UserLayout>
+        </UserRoute>
       ),
     },
     {
       path: "/orders",
       element: (
-        <UserLayout>
-          <Orders />
-        </UserLayout>
+        <UserRoute>
+          <UserLayout>
+            <Orders />
+          </UserLayout>
+        </UserRoute>
       ),
     },
     {
       path: "/checkout",
-      element: <Checkout />,
+      element: (
+        <UserRoute>
+          <UserLayout>
+            <Checkout />
+          </UserLayout>
+        </UserRoute>
+      ),
+    },
+    {
+      path: "/payment-success",
+      element: <PaymentSuccess />,
     },
   ],
 }

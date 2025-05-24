@@ -1,22 +1,10 @@
 import { Search } from "lucide-react"
 import Input from "../../../components/Input"
 import Table from "../../../components/Table"
-import { useState } from "react"
-
-const users = [
-  {
-    _id: "68149c48088f4ea00fd3d4fd",
-    name: "John Doe",
-    email: "john.doe@example.com",
-    role: "admin",
-  },
-  {
-    _id: "68149c48088f4ea00fd3d4fe",
-    name: "Jane Doe",
-    email: "jane.doe@example.com",
-    role: "user",
-  },
-]
+import { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import Spinner from "../../../components/Spinner"
+import { getUserByName, getUsers } from "../../../store/thunk/userThunk"
 
 const config = [
   {
@@ -35,11 +23,23 @@ const config = [
 
 function Users() {
   const [search, setSearch] = useState("")
+  const { users, isLoadingGetUsers } = useSelector((state) => state.user)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (!search) dispatch(getUsers())
+  }, [dispatch, search])
+
+  const handleSearch = (e) => {
+    e.preventDefault()
+    dispatch(getUserByName(search))
+  }
+
   return (
     <>
       <h1 className="text-2xl font-bold text-green-900">Pengguna</h1>
       <div className="mt-5 max-w-64">
-        <form>
+        <form onSubmit={handleSearch}>
           <div className="flex gap-2">
             <Input
               value={search}
@@ -57,7 +57,13 @@ function Users() {
           </div>
         </form>
       </div>
-      <Table data={users} config={config} />
+      {isLoadingGetUsers ? (
+        <Spinner size={12} />
+      ) : users.length === 0 ? (
+        <p className="text-center text-xl">Users not found</p>
+      ) : (
+        <Table data={users} config={config} />
+      )}
     </>
   )
 }

@@ -7,7 +7,10 @@ import { LogOut } from "lucide-react"
 import { LayoutGrid } from "lucide-react"
 import { useState } from "react"
 import { useEffect } from "react"
+import { useDispatch } from "react-redux"
 import { Link, Outlet, useLocation } from "react-router-dom"
+import { logout } from "../store/slices/authSlice"
+import Confirm from "../components/Confirm"
 
 const navItems = [
   {
@@ -38,13 +41,27 @@ const navItems = [
 function AdminLayout() {
   const [currentPath, setCurrentPath] = useState("")
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [openConfirm, setOpenConfirm] = useState(false)
   const location = useLocation()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     setCurrentPath(location.pathname)
   }, [location])
+
+  const handleLogout = () => {
+    dispatch(logout())
+    setOpenConfirm(false)
+  }
   return (
     <div className="flex h-screen overflow-hidden bg-green-50">
+      <Confirm
+        isOpen={openConfirm}
+        onClose={() => setOpenConfirm(false)}
+        onConfirm={handleLogout}
+        message={"Are you sure you want to exit?"}
+      />
+
       <aside
         className={`fixed lg:relative top-0 left-0 h-full transition-transform z-20 bg-green-900 text-white w-64 p-4 transform ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-0"
@@ -74,6 +91,7 @@ function AdminLayout() {
           </ul>
         </nav>
         <button
+          onClick={() => setOpenConfirm(true)}
           type="button"
           className="absolute bottom-4 left-4 hover:underline flex gap-2"
         >

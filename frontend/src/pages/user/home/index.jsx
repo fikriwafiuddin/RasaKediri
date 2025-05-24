@@ -1,26 +1,25 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import FoodCard from "./FoodCart"
 import AddToCartModal from "./AddToCartModal"
-
-const dummyData = [
-  {
-    _id: "1",
-    name: "Nasi Goreng Spesial",
-    price: 18000,
-    description: "Nasi goreng dengan telur dan ayam suwir",
-    image: "/images/Ayam geprek.jpg",
-  },
-  {
-    _id: "2",
-    name: "Mie Ayam Bakso",
-    price: 20000,
-    description: "Mie ayam lengkap dengan bakso dan sayur",
-    image: "/images/nasigoreng.jpg",
-  },
-]
+import { useDispatch, useSelector } from "react-redux"
+import { getMenus } from "../../../store/thunk/menuThunk"
+import Spinner from "../../../components/Spinner"
+import { addMenuToCart } from "../../../store/thunk/cartThunk"
 
 export default function Home() {
+  const { menus, isLoadingGetMenus } = useSelector((state) => state.menu)
+  const { isLoadingAddCart } = useSelector((state) => state.cart)
   const [selectedFood, setSelectedFood] = useState(null)
+  const [filterMenu, setFilterMenu] = useState("food")
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getMenus(filterMenu))
+  }, [filterMenu, dispatch])
+
+  const handleAddMenuToCart = (id, quantity) => {
+    dispatch(addMenuToCart({ id, quantity })).then(() => setSelectedFood(null))
+  }
 
   return (
     <>
@@ -52,30 +51,50 @@ export default function Home() {
         <div className="flex justify-center gap-4">
           <button
             type="button"
-            className="px-5 py-1 rounded-2xl bg-green-800 hover:bg-green-800 text-white duration-200"
+            onClick={() => setFilterMenu("food")}
+            className={`px-5 py-1 rounded-2xl hover:bg-green-800 text-white duration-200 ${
+              filterMenu === "food" ? "bg-green-800" : "bg-green-600"
+            }`}
           >
             Makanan
           </button>
           <button
             type="button"
-            className="px-5 py-1 rounded-2xl bg-green-600 hover:bg-green-800 text-white duration-200"
+            onClick={() => setFilterMenu("beverage")}
+            className={`px-5 py-1 rounded-2xl hover:bg-green-800 text-white duration-200 ${
+              filterMenu === "beverage" ? "bg-green-800" : "bg-green-600"
+            }`}
           >
             Minuman
           </button>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
-          {dummyData.map((item) => (
-            <FoodCard key={item._id} food={item} selectFood={setSelectedFood} />
-          ))}
-        </div>
+        {isLoadingGetMenus && (
+          <div className="mt-20">
+            <Spinner size={12} />
+          </div>
+        )}
+        {menus.length < 1 && !isLoadingGetMenus ? (
+          <p className="text-center mt-4 text-xl text-green-900">
+            Menu tidak ditemukan
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+            {menus.map((item) => (
+              <FoodCard
+                key={item._id}
+                food={item}
+                selectFood={setSelectedFood}
+              />
+            ))}
+          </div>
+        )}
       </div>
       {selectedFood && (
         <AddToCartModal
           onClose={() => setSelectedFood(null)}
           food={selectedFood}
-          onAddToCart={() => {
-            setSelectedFood(null)
-          }}
+          onAddToCart={handleAddMenuToCart}
+          isLoading={isLoadingAddCart}
         />
       )}
     </>

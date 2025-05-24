@@ -1,13 +1,9 @@
 import { useState } from "react"
 import StatusBadge from "../../../components/StatusBadge"
+import { formatCurrency } from "../../../utils/formatters"
 
 export default function OrderCard({ order }) {
   const [showDetail, setShowDetail] = useState(false)
-
-  const total = order.orderItems.reduce(
-    (sum, item) => sum + item.quantity * item.price,
-    0
-  )
 
   return (
     <div className="relative bg-white rounded-lg shadow max-w-2xl mx-auto p-4">
@@ -42,13 +38,14 @@ export default function OrderCard({ order }) {
                 className="flex justify-between items-center text-sm border-b pb-1"
               >
                 <div>
-                  <p className="font-medium">{item.name}</p>
+                  <p className="font-medium">{item.menu.name}</p>
                   <p className="text-gray-600">
-                    {item.quantity} × Rp {item.price.toLocaleString()}
+                    {item.quantity} ×{" "}
+                    {formatCurrency(item.menu.price.toLocaleString())}
                   </p>
                 </div>
                 <p className="font-bold text-green-900">
-                  Rp {(item.quantity * item.price).toLocaleString()}
+                  {formatCurrency(item.quantity * item.menu.price)}
                 </p>
               </li>
             ))}
@@ -56,7 +53,7 @@ export default function OrderCard({ order }) {
 
           <div className="pt-2 border-t text-right">
             <p className="font-bold text-green-900 text-lg">
-              Total: Rp {total.toLocaleString()}
+              Total: {formatCurrency(order.amount)}
             </p>
           </div>
         </div>

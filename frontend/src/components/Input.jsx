@@ -1,4 +1,13 @@
-function Input({ name, label, value, onChange, type, placeholder }) {
+function Input({
+  name,
+  label,
+  value,
+  onChange,
+  type,
+  placeholder,
+  error,
+  ref,
+}) {
   return (
     <div key={name} className="flex flex-col text-sm w-full">
       {label && (
@@ -7,6 +16,7 @@ function Input({ name, label, value, onChange, type, placeholder }) {
         </label>
       )}
       <input
+        ref={ref}
         value={type !== "file" ? value : null}
         onChange={onChange}
         className="outline-2 outline-green-900 rounded-sm p-1"
@@ -15,6 +25,7 @@ function Input({ name, label, value, onChange, type, placeholder }) {
         id={name}
         placeholder={placeholder}
       />
+      {error && <p className="text-red-500">{error}</p>}
     </div>
   )
 }
