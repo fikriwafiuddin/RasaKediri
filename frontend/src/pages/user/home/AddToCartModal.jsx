@@ -52,11 +52,7 @@ function AddToCartModal({ food, onClose, onAddToCart, isLoading }) {
           type="button"
           className="bg-green-900 hover:bg-green-900 text-white rounded w-full py-2"
         >
-          {isLoading ? (
-            <Spinner size={4} type="secondary" />
-          ) : (
-            "Tambahkan ke keranjang"
-          )}
+          {isLoading ? <Spinner size={4} type="secondary" /> : "Add to cart"}
         </button>
       </div>
     </div>

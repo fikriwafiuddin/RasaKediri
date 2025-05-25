@@ -30,23 +30,23 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
           <div className="text-center text-white p-4">
             <h2 className="text-3xl md:text-4xl font-bold mb-2">
-              Rasakan Kelezatan Setiap Suapan
+              Taste the Deliciousness of Every Mouthful
             </h2>
             <p className="text-lg md:text-xl mb-6">
-              Pesan makanan favorit Anda dan nikmati di rumah
+              Order your favorite food and enjoy it at home
             </p>
             <a
               href="#menu"
               className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full transition-colors"
             >
-              Lihat Menu
+              Brows Menus
             </a>
           </div>
         </div>
       </section>
       <div className="p-4 max-w-6xl mx-auto mb-24">
         <h2 className="text-3xl font-bold mb-4 text-center text-green-900">
-          Menu Kami
+          Our Menus
         </h2>
         <div className="flex justify-center gap-4">
           <button
@@ -56,7 +56,7 @@ export default function Home() {
               filterMenu === "food" ? "bg-green-800" : "bg-green-600"
             }`}
           >
-            Makanan
+            Food
           </button>
           <button
             type="button"
@@ -65,7 +65,7 @@ export default function Home() {
               filterMenu === "beverage" ? "bg-green-800" : "bg-green-600"
             }`}
           >
-            Minuman
+            Beverage
           </button>
         </div>
         {isLoadingGetMenus && (
@@ -75,7 +75,7 @@ export default function Home() {
         )}
         {menus.length < 1 && !isLoadingGetMenus ? (
           <p className="text-center mt-4 text-xl text-green-900">
-            Menu tidak ditemukan
+            Menus not found
           </p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">

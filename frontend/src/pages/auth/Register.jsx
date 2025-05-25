@@ -15,7 +15,7 @@ const config = [
   },
   {
     name: "name",
-    label: "Nama",
+    label: "Name",
     type: "text",
   },
   {
@@ -24,7 +24,7 @@ const config = [
     type: "password",
   },
   {
-    name: "confirm_password",
+    name: "confirmPassword",
     label: "Confirm Password",
     type: "password",
   },
@@ -42,6 +42,7 @@ function Register() {
     mode: "onSubmit",
   })
   const dispatch = useDispatch()
+  console.log(errors)
 
   const onSubmit = (data) => {
     dispatch(registerUser(data))
@@ -69,20 +70,21 @@ function Register() {
             ))}
           </div>
           <button
+            disabled={isLoadingRegister}
             className="w-full bg-green-900 hover:bg-green-800 text-white rounded py-2 mt-5"
             type="submit"
           >
             {isLoadingRegister ? (
               <Spinner size={4} type="secondary" />
             ) : (
-              "Registrasi"
+              "Register"
             )}
           </button>
         </form>
         <p className="text-sm text-center mt-4">
-          Sudah punya akun?{" "}
+          Already have an account?{" "}
           <Link className="text-blue-500 hover:underline" to="/auth/login">
-            Registrasi
+            Register
           </Link>
         </p>
       </div>

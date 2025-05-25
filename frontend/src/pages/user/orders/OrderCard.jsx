@@ -12,12 +12,12 @@ export default function OrderCard({ order }) {
       </div>
       <div className="border-b">
         <h2 className="text-lg font-bold text-green-900">Order #{order._id}</h2>
-        <p className="text-sm text-gray-700">Nama: {order.name}</p>
+        <p className="text-sm text-gray-700">Name: {order.name}</p>
         <p className="text-sm text-gray-700">Email: {order.email}</p>
-        <p className="text-sm text-gray-700">Telepon: {order.phone}</p>
-        <p className="text-sm text-gray-700">Alamat: {order.address}</p>
+        <p className="text-sm text-gray-700">Phone: {order.phone}</p>
+        <p className="text-sm text-gray-700">Address: {order.address}</p>
         {order.notes && (
-          <p className="text-sm text-gray-700">Catatan: {order.notes}</p>
+          <p className="text-sm text-gray-700">Notes: {order.notes}</p>
         )}
       </div>
 
@@ -26,7 +26,7 @@ export default function OrderCard({ order }) {
         type="button"
         className="text-xs ml-auto block mt-1 text-green-600 hover:text-green-700"
       >
-        {showDetail === order._id ? "Tutup detail <<" : "Lihat detail >>"}
+        {showDetail === order._id ? "Close detail <<" : "Show detail >>"}
       </button>
 
       {showDetail === order._id && (

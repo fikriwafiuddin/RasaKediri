@@ -10,11 +10,11 @@ import Confirm from "../../../components/Confirm"
 
 const config = [
   {
-    label: "Nama",
+    label: "Name",
     render: (data) => data.name,
   },
   {
-    label: "Harga",
+    label: "Price",
     render: (data) =>
       data.price.toLocaleString("id-ID", {
         style: "currency",
@@ -22,11 +22,11 @@ const config = [
       }),
   },
   {
-    label: "Terjual",
+    label: "Sold",
     render: (data) => data.sold.toLocaleString(),
   },
   {
-    label: "Aksi",
+    label: "Action",
     render: (data, action) => (
       <div className="flex gap-2">
         <button
@@ -94,7 +94,7 @@ function Menu() {
         isLoading={isLoadingDeleteMenu}
       />
 
-      <h1 className="text-2xl font-bold text-green-900">Menu</h1>
+      <h1 className="text-2xl font-bold text-green-900">Menus</h1>
 
       {openForm && (
         <button
@@ -105,7 +105,7 @@ function Menu() {
           className="text-xs font-semibold text-green-900 hover:underline mt-5"
           type="button"
         >
-          {"<<"} kembali
+          {"<<"} back
         </button>
       )}
 
@@ -118,7 +118,7 @@ function Menu() {
             className="rounded bg-green-900 text-white hover:bg-green-800 px-4 py-1 font-semibold"
             onClick={() => setOpenForm(true)}
           >
-            Tambah menu +
+            Add menu +
           </button>
           <div className="flex gap-4">
             <button
@@ -128,7 +128,7 @@ function Menu() {
                 category === "food" && "bg-green-900 text-white"
               }`}
             >
-              Makanan
+              Food
             </button>
             <button
               onClick={() => handleChangeCategory("beverage")}
@@ -137,7 +137,7 @@ function Menu() {
                 category === "beverage" && "bg-green-900 text-white"
               }`}
             >
-              Minuman
+              Beverage
             </button>
           </div>
         </div>

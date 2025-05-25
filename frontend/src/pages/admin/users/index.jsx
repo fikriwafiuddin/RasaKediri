@@ -37,7 +37,7 @@ function Users() {
 
   return (
     <>
-      <h1 className="text-2xl font-bold text-green-900">Pengguna</h1>
+      <h1 className="text-2xl font-bold text-green-900">Users</h1>
       <div className="mt-5 max-w-64">
         <form onSubmit={handleSearch}>
           <div className="flex gap-2">

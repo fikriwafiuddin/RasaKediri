@@ -29,7 +29,7 @@ export const getUserByName = async (req, res) => {
       .status(200)
       .json({ message: "User retrieved successfully", data: { user } })
   } catch (error) {
-    console.log("Error in getUserById", error)
+    console.log("Error in getUserByName", error)
     return res
       .status(500)
       .json({ message: "Internal server error", errors: {} })

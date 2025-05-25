@@ -8,15 +8,15 @@ import Spinner from "../../../components/Spinner"
 
 const config = [
   {
-    label: "Nama",
+    label: "Name",
     render: (data) => data.menu.name,
   },
   {
-    label: "Jumlah",
+    label: "Quantity",
     render: (data) => data.quantity.toLocaleString(),
   },
   {
-    label: "Harga",
+    label: "Price",
     render: (data) => formatCurrency(data.menu.price),
   },
   {
@@ -26,11 +26,11 @@ const config = [
 ]
 
 const statusOptions = [
-  { value: "pending", label: "Menunggu" },
-  { value: "processing", label: "Diproses" },
-  { value: "shipped", label: "Dikirim" },
-  { value: "delivered", label: "Diterima" },
-  { value: "cancelled", label: "Dibatalkan" },
+  { value: "pending", label: "Pending" },
+  { value: "processing", label: "Processing" },
+  { value: "shipped", label: "Shipped" },
+  { value: "delivered", label: "Delivered" },
+  { value: "cancelled", label: "Cancelled" },
 ]
 
 function DetailOrder({ order, onClose }) {
@@ -51,14 +51,14 @@ function DetailOrder({ order, onClose }) {
         onClick={onClose}
         className="text-sm hover:underline"
       >
-        {"<<"} kembali
+        {"<<"} back
       </button>
       <h2 className="font-bold text-xl">Id: {order._id}</h2>
       <div className="text-sm overflow-y-auto">
         <table className="border-spacing-x-10">
           <tbody>
             <tr>
-              <td className="font-semibold pr-10">Pembeli </td>
+              <td className="font-semibold pr-10">Buyer </td>
               <td>: {order.name}</td>
             </tr>
             <tr>
@@ -66,11 +66,11 @@ function DetailOrder({ order, onClose }) {
               <td>: {order.email}</td>
             </tr>
             <tr>
-              <td className="font-semibold">No Hp </td>
+              <td className="font-semibold">Phone </td>
               <td>: {order.phone}</td>
             </tr>
             <tr>
-              <td className="font-semibold">Alamat </td>
+              <td className="font-semibold">Address </td>
               <td>: {order.address}</td>
             </tr>
             <tr>
@@ -80,7 +80,7 @@ function DetailOrder({ order, onClose }) {
               </td>
             </tr>
             <tr>
-              <td className="font-semibold">Catatan</td>
+              <td className="font-semibold">Notes</td>
               <td>:</td>
             </tr>
           </tbody>

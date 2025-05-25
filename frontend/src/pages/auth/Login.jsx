@@ -67,9 +67,9 @@ function Login() {
           </button>
         </form>
         <p className="text-sm text-center mt-4">
-          Belum punya akun?{" "}
+          {"Don't"} have an account yet?{" "}
           <Link className="text-blue-500 hover:underline" to="/auth/register">
-            Registrasi
+            Register
           </Link>
         </p>
       </div>

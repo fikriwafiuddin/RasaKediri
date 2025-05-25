@@ -13,17 +13,17 @@ import Spinner from "../../../components/Spinner"
 const config = [
   {
     name: "name",
-    label: "Nama",
+    label: "Name",
     type: "text",
   },
   {
     name: "price",
-    label: "Harga",
+    label: "Price",
     type: "number",
   },
   {
     name: "category",
-    label: "Kategori",
+    label: "Category",
     type: "select",
     options: [
       { value: "food", label: "Food" },
@@ -32,12 +32,12 @@ const config = [
   },
   {
     name: "description",
-    label: "Deskripsi",
+    label: "Description",
     type: "textarea",
   },
   {
     name: "image",
-    label: "Gambar",
+    label: "Image",
     type: "file",
   },
 ]
@@ -167,7 +167,7 @@ function FormMenu({ food, setOpenForm }) {
           type="submit"
           className="bg-green-900 hover:bg-green-800 text-white rounded py-2 px-6 mt-4"
         >
-          {isLoading ? <Spinner size={4} type="secondary" /> : "Simpan"}
+          {isLoading ? <Spinner size={4} type="secondary" /> : "Save"}
         </button>
       </form>
     </div>

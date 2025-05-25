@@ -3,7 +3,7 @@ function TopMenu({ menus, isLoading }) {
 
   return (
     <div className="mt-5 text-green-900">
-      <h2 className="font-semibold text-xl text-green-900">Menu Terlaris</h2>
+      <h2 className="font-semibold text-xl text-green-900">Top Menus</h2>
       <div className="flex gap-4 mt-3 overflow-y-auto">
         {isLoading
           ? skeletonMenus.map((_, index) => (
@@ -30,7 +30,7 @@ function TopMenu({ menus, isLoading }) {
                 />
                 <div>
                   <h3 className="font-semibold text-sm">{menu.name}</h3>
-                  <p className="text-xs">Terjual {menu.sold}</p>
+                  <p className="text-xs">Sold {menu.sold}</p>
                 </div>
               </div>
             ))}

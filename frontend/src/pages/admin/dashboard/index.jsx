@@ -8,7 +8,7 @@ import { axiosAuthInstance } from "../../../utils/axios"
 
 const config = [
   {
-    label: "Nama",
+    label: "Name",
     render: (order) => order.name,
   },
   {
@@ -20,7 +20,7 @@ const config = [
     render: (order) => <StatusBadge status={order.status} />,
   },
   {
-    label: "Tanggal",
+    label: "Date",
     render: (order) => formatDate(order.createdAt),
   },
 ]

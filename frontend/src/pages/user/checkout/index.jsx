@@ -11,7 +11,7 @@ import Spinner from "../../../components/Spinner"
 const config = [
   {
     name: "name",
-    label: "Nama",
+    label: "Name",
     type: "text",
   },
   {
@@ -21,17 +21,17 @@ const config = [
   },
   {
     name: "phone",
-    label: "Nomor Telepon",
+    label: "Phone",
     type: "text",
   },
   {
     name: "address",
-    label: "Alamat",
+    label: "Address",
     type: "text",
   },
   {
     name: "notes",
-    label: "Catatan",
+    label: "Notes",
     type: "textarea",
   },
 ]
@@ -71,7 +71,7 @@ function Checkout() {
           className="absolute -top-6 left-0 text-sm font-semibold hover:underline"
           to={"/"}
         >
-          {"<<"} kembali
+          {"<<"} back
         </Link>
         <h1 className="text-center font-bold text-2xl mb-4">Chekout</h1>
         <form onSubmit={handleSubmit(onSubmit)}>

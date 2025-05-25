@@ -15,7 +15,7 @@ function Orders() {
   return (
     <>
       <h1 className="text-3xl font-bold text-green-900 text-center mb-6 mt-2">
-        Pesanan
+        Orders
       </h1>
       <div className="space-y-4">
         {isLoadingGetMyOrders ? (

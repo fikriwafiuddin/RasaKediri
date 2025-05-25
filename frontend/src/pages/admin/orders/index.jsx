@@ -15,12 +15,12 @@ import {
 import Confirm from "../../../components/Confirm"
 
 const statusOptions = [
-  { value: "all", label: "Semua" },
-  { value: "pending", label: "Menunggu" },
-  { value: "processing", label: "Diproses" },
-  { value: "shipped", label: "Dikirim" },
-  { value: "delivered", label: "Diterima" },
-  { value: "cancelled", label: "Dibatalkan" },
+  { value: "all", label: "All" },
+  { value: "pending", label: "Pending" },
+  { value: "processing", label: "Processing" },
+  { value: "shipped", label: "Shipped" },
+  { value: "delivered", label: "Delivered" },
+  { value: "cancelled", label: "Cancelled" },
 ]
 
 const config = [
@@ -29,7 +29,7 @@ const config = [
     render: (data) => data._id,
   },
   {
-    label: "Pembeli",
+    label: "Buyer",
     render: (data) => data.user.name,
   },
   {
@@ -45,7 +45,7 @@ const config = [
     render: (data) => <StatusBadge status={data.status} />,
   },
   {
-    label: "Tanggal",
+    label: "Date",
     render: (data) =>
       new Date(data.createdAt).toLocaleString("id-ID", {
         dateStyle: "long",
@@ -53,7 +53,7 @@ const config = [
       }),
   },
   {
-    label: "Aksi",
+    label: "Action",
     render: (data, action) => (
       <div className="flex gap-2">
         <button
@@ -117,7 +117,7 @@ function Orders() {
         isLoading={isLoadingDeleteOrder}
         onConfirm={handleDeleteOrder}
       />
-      <h1 className="text-2xl font-bold text-green-900">Pesanan</h1>
+      <h1 className="text-2xl font-bold text-green-900">Orders</h1>
       {selectedOrder ? (
         <DetailOrder
           order={selectedOrder}
@@ -133,7 +133,7 @@ function Orders() {
                   onChange={(e) => setSearch(e.target.value)}
                   type="search"
                   name={"search"}
-                  placeholder={"Cari id pesanan..."}
+                  placeholder={"Find order by id"}
                 />
                 <button
                   type="submit"

@@ -13,7 +13,7 @@ export default function FoodCard({ food, selectFood }) {
         type="button"
         className="bg-green-900 hover:bg-green-800 text-white py-2 rounded w-full mt-4"
       >
-        Tambah Keranjang
+        Add Cart
       </button>
     </div>
   )
