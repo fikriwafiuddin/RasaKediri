@@ -64,9 +64,9 @@ export const searchOrderById = createAsyncThunk(
   "order/searchOrderById",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axiosAuthInstance.get(
-        `/order/searchOrderById/${id}`
-      )
+      const response = await axiosAuthInstance.get(`/order/searchOrderById`, {
+        params: { id },
+      })
       return response.data
     } catch (error) {
       console.log(error)

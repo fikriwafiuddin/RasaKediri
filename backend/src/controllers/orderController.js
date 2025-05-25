@@ -181,7 +181,7 @@ export const deleteOrder = async (req, res) => {
 }
 
 export const searchOrderById = async (req, res) => {
-  const id = req.params?.id
+  const id = req.query?.id
   try {
     if (!id) {
       return res

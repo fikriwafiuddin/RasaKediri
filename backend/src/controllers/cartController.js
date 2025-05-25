@@ -11,6 +11,12 @@ export const getCart = async (req, res) => {
       return res.status(404).json({ message: "Cart not found", errors: {} })
     }
 
+    const filteredMenuItems = cart.menuItems.filter(
+      (item) => item.menu !== null
+    )
+    cart.menuItems = filteredMenuItems
+    await cart.save()
+
     return res.status(200).json({ message: "Cart found", data: { cart } })
   } catch (error) {
     console.log(error)
@@ -39,7 +45,7 @@ export const addMenuToCart = async (req, res) => {
         menuItems: [{ menu: menu._id, quantity }],
       })
       await newCart.save()
-
+      await newCart.populate("menuItems.menu")
       return res
         .status(200)
         .json({ message: "Product added to cart", data: { cart: newCart } })

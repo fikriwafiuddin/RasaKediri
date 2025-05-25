@@ -24,10 +24,12 @@ export const getUserByName = async (req, res) => {
       })
     }
 
-    const user = await User.findOne({ name }).select("-password")
+    const users = await User.find({
+      name: { $regex: name, $options: "i" }, // "i" => ignore case
+    }).select("-password")
     return res
       .status(200)
-      .json({ message: "User retrieved successfully", data: { user } })
+      .json({ message: "User retrieved successfully", data: { users } })
   } catch (error) {
     console.log("Error in getUserByName", error)
     return res

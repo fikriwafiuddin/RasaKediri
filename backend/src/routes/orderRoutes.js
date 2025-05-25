@@ -31,6 +31,6 @@ route.patch(
   changeStatusOrder
 )
 route.delete("/deleteOrder/:id", verifyToken, verifyAdmin, deleteOrder)
-route.get("/searchOrderById/:id", verifyToken, verifyAdmin, searchOrderById)
+route.get("/searchOrderById", verifyToken, verifyAdmin, searchOrderById)
 
 export default route

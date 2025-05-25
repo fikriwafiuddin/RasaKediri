@@ -13,7 +13,7 @@ function AddToCartModal({ food, onClose, onAddToCart, isLoading }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-1">
-      <div className="relative p-6 rounded shadow bg-white max-w-md">
+      <div className="relative p-6 rounded shadow bg-white w-md">
         <button
           type="button"
           onClick={onClose}

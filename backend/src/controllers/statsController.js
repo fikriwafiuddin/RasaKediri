@@ -7,10 +7,16 @@ export const getStats = async (req, res) => {
     const totalUsers = await User.countDocuments()
     const totalOrders = await Order.countDocuments()
     const totalMenus = await Menu.countDocuments()
+    const totalRevenueAgg = await Order.aggregate([
+      { $match: { status: { $in: ["delivered"] } } },
+      { $group: { _id: null, total: { $sum: "$amount" } } },
+    ])
+
+    const totalRevenue = totalRevenueAgg[0]?.total || 0
 
     return res.status(200).json({
       message: "Succsess get stats",
-      data: { stats: { totalUsers, totalOrders, totalMenus } },
+      data: { stats: { totalUsers, totalOrders, totalMenus, totalRevenue } },
     })
   } catch (error) {
     console.log(error)

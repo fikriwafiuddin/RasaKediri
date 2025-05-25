@@ -44,11 +44,21 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <div className="p-4 max-w-6xl mx-auto mb-24">
+      <section className="bg-green-100 text-green-900 text-center py-4">
+        <p className="text-lg font-medium">
+          Payment is only available through{" "}
+          <span className="font-bold">COD</span> (Cash On Delivery).
+          <br />
+          <span className="font-bold">Free shipping</span> for{" "}
+          <span className="font-bold"> Kediri </span>
+          <span> area only.</span>
+        </p>
+      </section>
+      <div className="p-4 max-w-6xl mx-auto mb-24 mt-4">
         <h2 className="text-3xl font-bold mb-4 text-center text-green-900">
           Our Menus
         </h2>
-        <div className="flex justify-center gap-4">
+        <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto">
           <button
             type="button"
             onClick={() => setFilterMenu("food")}

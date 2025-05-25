@@ -18,14 +18,14 @@ export default function Header({ openCart }) {
         {user ? (
           <>
             <Link to="/orders" className="hover:underline duration-200">
-              Pesananan
+              Orders
             </Link>
             <button
               onClick={openCart}
               type="button"
               className="hover:underline duration-200"
             >
-              Keranjang
+              Cart
             </button>
             <button onClick={handleLogout} type="button">
               Logout

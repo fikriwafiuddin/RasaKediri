@@ -42,7 +42,7 @@ export default function Cart({ onClose, show, cart, isLoading }) {
         </button>
         {/* Header */}
         <h2 className="text-center font-bold text-green-900 text-xl mb-4">
-          Keranjang
+          Cart
         </h2>
 
         {/* List item scrollable */}
@@ -74,7 +74,7 @@ export default function Cart({ onClose, show, cart, isLoading }) {
               isCheckoutDisabled && "opacity-50 cursor-not-allowed"
             }`}
           >
-            Bayar
+            Checkout
           </button>
         </div>
       </div>

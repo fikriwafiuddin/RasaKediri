@@ -1,6 +1,8 @@
 import Spinner from "../../../components/Spinner"
+import { formatCurrency } from "../../../utils/formatters"
 
 function Stats({ stats, isLoading }) {
+  console.log(stats)
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mt-5">
       <div className="text-green-900 border-2 border-green-900 rounded p-4">
@@ -29,7 +31,13 @@ function Stats({ stats, isLoading }) {
       </div>
       <div className="text-green-900 border-2 border-green-900 rounded p-4">
         <h2 className="font-bold text-xl">Revenue</h2>
-        <p className="font-semibold">20</p>
+        {isLoading ? (
+          <Spinner size={4} />
+        ) : (
+          <p className="font-semibold">
+            {formatCurrency(stats.totalRevenue || 0)}
+          </p>
+        )}
       </div>
     </div>
   )
