@@ -7,6 +7,7 @@ import { orderSchema } from "../../../schemas/orderSchema"
 import { axiosAuthInstance } from "../../../utils/axios"
 import { useState } from "react"
 import Spinner from "../../../components/Spinner"
+import { toast } from "react-toastify"
 
 const config = [
   {
@@ -56,6 +57,7 @@ function Checkout() {
       navigate("/payment-success")
     } catch (error) {
       console.log(error)
+      toast.error(error.response.data.message)
       for (const key in error?.errors) {
         setError(key, { message: error.errors[key][0] })
       }
