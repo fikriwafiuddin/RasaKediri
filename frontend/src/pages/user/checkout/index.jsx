@@ -8,6 +8,8 @@ import { axiosAuthInstance } from "../../../utils/axios"
 import { useState } from "react"
 import Spinner from "../../../components/Spinner"
 import { toast } from "react-toastify"
+import { resetCart } from "../../../store/slices/cartSlice"
+import { useDispatch } from "react-redux"
 
 const config = [
   {
@@ -49,11 +51,13 @@ function Checkout() {
   })
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const onSubmit = async (data) => {
     setIsLoading(true)
     try {
       await axiosAuthInstance.post("/order/createOrder", data)
+      dispatch(resetCart())
       navigate("/payment-success")
     } catch (error) {
       console.log(error)

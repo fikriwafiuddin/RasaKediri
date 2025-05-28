@@ -15,6 +15,9 @@ const cartSlice = createSlice({
     },
   },
   reducers: {
+    resetCart(state) {
+      state.cart = null
+    },
     setUnsavedChange(state, action) {
       const { id, hasChange } = action.payload
       state.unsavedChangesById[id] = hasChange
@@ -73,6 +76,6 @@ const cartSlice = createSlice({
   },
 })
 
-export const { setUnsavedChange, setItemLoading, clearMessage } =
+export const { setUnsavedChange, setItemLoading, clearMessage, resetCart } =
   cartSlice.actions
 export default cartSlice.reducer
