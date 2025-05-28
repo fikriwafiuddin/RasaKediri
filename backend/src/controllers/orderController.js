@@ -2,10 +2,46 @@ import mongoose from "mongoose"
 import Cart from "../models/cartModel.js"
 import Menu from "../models/menuModel.js"
 import Order from "../models/orderModel.js"
+import { DateTime } from "luxon"
 
 export const createOrder = async (req, res) => {
   const { name, email, phone, address, notes } = req.body
   const user = req.user
+
+  const now = DateTime.now().setZone("Asia/Jakarta")
+  const currentDay = now.weekday
+  const currentHour = now.hour
+  const currentMinute = now.minute
+
+  const isWeekday = currentDay >= 1 && currentDay <= 5
+  const isWeekend = currentDay === 6 || currentDay === 7
+
+  const currentTime = currentHour * 60 + currentMinute
+
+  const weekdayStart = 10 * 60
+  const weekdayEnd = 22 * 60
+
+  const weekendStart = 9 * 60
+  const weekendEnd = 23 * 60
+
+  let isOpen = false
+
+  if (isWeekday) {
+    isOpen = currentTime >= weekdayStart && currentTime < weekdayEnd
+  } else if (isWeekend) {
+    isOpen = currentTime >= weekendStart && currentTime < weekendEnd
+  }
+
+  if (!isOpen) {
+    return res.status(403).json({
+      message:
+        "Order can only be placed during opening hours:\n" +
+        "Monday-Friday: 10:00-22:00\n" +
+        "Saturday-Sunday: 09:00-23:00",
+      errors: {},
+    })
+  }
+
   try {
     const cart = await Cart.findOne({ user: user._id }).populate(
       "menuItems.menu"

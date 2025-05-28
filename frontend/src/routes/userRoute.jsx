@@ -32,9 +32,7 @@ const userRoute = {
       path: "/checkout",
       element: (
         <UserRoute>
-          <UserLayout>
-            <Checkout />
-          </UserLayout>
+          <Checkout />
         </UserRoute>
       ),
     },

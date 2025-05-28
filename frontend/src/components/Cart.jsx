@@ -4,12 +4,14 @@ import Spinner from "./Spinner"
 import { formatCurrency } from "../utils/formatters"
 import CartItem from "./CartItem"
 import { useSelector } from "react-redux"
+import { isRestaurantOpen } from "../utils/time"
 
 export default function Cart({ onClose, show, cart, isLoading }) {
   const { isLoadingById, unsavedChangesById } = useSelector(
     (state) => state.cart
   )
   const navigate = useNavigate()
+  const restaurantOpen = isRestaurantOpen()
 
   const totalPrice =
     cart?.menuItems.reduce((total, item) => {
@@ -20,7 +22,10 @@ export default function Cart({ onClose, show, cart, isLoading }) {
   const hasLoadingItems = Object.values(isLoadingById).some(Boolean)
 
   const isCheckoutDisabled =
-    cart?.menuItems.length === 0 || hasUnsavedChanges || hasLoadingItems
+    cart?.menuItems.length === 0 ||
+    hasUnsavedChanges ||
+    hasLoadingItems ||
+    !restaurantOpen
 
   return (
     <div
@@ -76,6 +81,14 @@ export default function Cart({ onClose, show, cart, isLoading }) {
           >
             Checkout
           </button>
+          {!restaurantOpen && (
+            <p className="mt-2 text-sm text-red-600 text-center">
+              The restaurant is currently closed. Opening hours:
+              <br />
+              <strong>Monday-Friday: 10.00-22.00 WIB</strong> <br />
+              <strong>Saturday-Sunday: 09.00-23.00 WIB</strong>
+            </p>
+          )}
         </div>
       </div>
     </div>
