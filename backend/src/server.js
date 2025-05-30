@@ -28,5 +28,8 @@ app.use("/cart", cartRoutes)
 app.use("/order", orderRoutes)
 app.use("/user", userRoutes)
 app.use("/stats", StatsRoutes)
+app.all(/.*/, (req, res) =>
+  res.status(404).json({ message: "Route not found", errors: {} })
+)
 
 app.listen(port, () => console.log("Server is running on port", port))
