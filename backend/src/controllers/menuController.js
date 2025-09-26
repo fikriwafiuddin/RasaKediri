@@ -10,7 +10,7 @@ export const getMenus = async (req, res) => {
     } else {
       menus = await Menu.find({ category })
     }
-
+    console.log(menus)
     return res
       .status(200)
       .json({ message: "Get menu successfull", data: { menus } })

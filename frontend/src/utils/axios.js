@@ -31,9 +31,6 @@ axiosAuthInstance.interceptors.response.use(
     if (status === 401) {
       console.error("Unauthorized! Redirecting to login...")
       localStorage.removeItem(KEY_TOKEN)
-    } else if (status === 500) {
-      console.error("Internal Server Error (500)! Redirecting...")
-      window.location.href = "/error-500"
     }
     return Promise.reject(error)
   }

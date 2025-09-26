@@ -13,7 +13,7 @@ import uploadFile from "../middlewares/uploadeFile.js"
 
 const route = express.Router()
 
-route.get("/getMenus/", getMenus)
+route.get("/getMenus", getMenus)
 route.post(
   "/addMenu",
   verifyToken,
