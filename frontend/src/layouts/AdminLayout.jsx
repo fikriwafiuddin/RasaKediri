@@ -27,12 +27,12 @@ const navItems = [
   },
   {
     id: "orders",
-    label: "Pesanan",
+    label: "Orders",
     icon: <Box />,
     to: "/admin/orders",
   },
   {
-    label: "pengguna",
+    label: "Users",
     icon: <Users />,
     to: "/admin/users",
   },

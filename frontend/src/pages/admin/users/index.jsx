@@ -8,7 +8,7 @@ import { getUserByName, getUsers } from "../../../store/thunk/userThunk"
 
 const config = [
   {
-    label: "Nama",
+    label: "Name",
     render: (user) => user.name,
   },
   {
@@ -46,7 +46,7 @@ function Users() {
               onChange={(e) => setSearch(e.target.value)}
               type="search"
               name={"search"}
-              placeholder={"Cari nama pengguna..."}
+              placeholder={"search username..."}
             />
             <button
               type="submit"

@@ -38,7 +38,6 @@ function Dashboard() {
       setIsLoadingGetStats(true)
       try {
         const response = await axiosAuthInstance.get("/stats/getStats")
-        console.log(response.data)
         return setStats(response.data.data.stats)
       } catch (error) {
         console.log(error)
